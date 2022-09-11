@@ -24,7 +24,7 @@ func (app App) commandStart(message *tgbotapi.Message) (err error) {
 }
 
 func (app App) commandUnknown(message *tgbotapi.Message) (err error) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Не известная команда")
+	msg := tgbotapi.NewMessage(message.Chat.ID, "Неизвестная команда")
 	_, err = app.Bot.Send(msg)
 	if err != nil {
 		return

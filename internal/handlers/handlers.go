@@ -96,10 +96,10 @@ func (app *App) Run() (err error) {
 			continue
 		}
 
-		//err = app.handleCommand(update.Message)
-		//if err != nil {
-		//	log.Println(err)
-		//}
+		err = app.handleMessage(update.Message)
+		if err != nil {
+			log.Println(err)
+		}
 	}
 
 	return
