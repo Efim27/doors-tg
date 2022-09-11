@@ -82,7 +82,24 @@ func (app *App) Run() (err error) {
 	}
 
 	for update := range app.UpdatesTG {
-		log.Println(update)
+		// ignore any non-Message updates
+		if update.Message == nil {
+			continue
+		}
+
+		if update.Message.IsCommand() {
+			err = app.handleCommand(update.Message)
+			if err != nil {
+				log.Println(err)
+			}
+
+			continue
+		}
+
+		//err = app.handleCommand(update.Message)
+		//if err != nil {
+		//	log.Println(err)
+		//}
 	}
 
 	return
