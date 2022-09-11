@@ -15,6 +15,13 @@ func (app App) handleCommand(message *tgbotapi.Message) (err error) {
 
 func (app App) commandStart(message *tgbotapi.Message) (err error) {
 	msg := tgbotapi.NewMessage(message.Chat.ID, "Hi!")
+
+	newUser := message.From
+	err = app.ClientAPI.NewUserTG(newUser.ID, message.Chat.ID, newUser.UserName, newUser.FirstName, newUser.LastName, newUser.LanguageCode)
+	if err != nil {
+		msg = tgbotapi.NewMessage(message.Chat.ID, err.Error())
+	}
+
 	_, err = app.Bot.Send(msg)
 	if err != nil {
 		return

@@ -8,7 +8,7 @@ import (
 
 func (app App) handleMessage(message *tgbotapi.Message) (err error) {
 	msgText := strings.ToLower(strings.TrimSpace(message.Text))
-	
+
 	if strings.Contains(msgText, "подтвердить") {
 		err = app.handleMsgConfirm(message)
 	} else if strings.Contains(msgText, "отмена") {

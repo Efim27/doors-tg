@@ -9,12 +9,14 @@ import (
 
 	"github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"smart-doors-tg/internal/config"
+	"smart-doors-tg/internal/requests"
 )
 
 type App struct {
 	Bot       *tgbotapi.BotAPI
 	UpdatesTG tgbotapi.UpdatesChannel
 	Config    config.Config
+	ClientAPI requests.ClientAPI
 	Logger    *log.Logger
 }
 
@@ -26,6 +28,8 @@ func NewApp(config config.Config) (app *App, err error) {
 	if err != nil {
 		return
 	}
+
+	app.ClientAPI = *requests.NewClientAPI(app.Config.ControlAPIAddr)
 
 	app.Bot.Debug = app.Config.Debug
 	log.Printf("Authorized on account %s\n", app.Bot.Self.UserName)
