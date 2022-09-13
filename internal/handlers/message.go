@@ -21,8 +21,10 @@ func (app App) handleMessage(message *tgbotapi.Message) (err error) {
 }
 
 func (app App) handleMsgConfirm(message *tgbotapi.Message) (err error) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Accept!")
+	msg := tgbotapi.NewMessage(message.Chat.ID, "Вы успешно открыли помещение")
 	_, err = app.Bot.Send(msg)
+
+	err = app.NotifyAdmins("")
 	if err != nil {
 		return
 	}
@@ -31,7 +33,7 @@ func (app App) handleMsgConfirm(message *tgbotapi.Message) (err error) {
 }
 
 func (app App) handleMsgCancel(message *tgbotapi.Message) (err error) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Cancel!")
+	msg := tgbotapi.NewMessage(message.Chat.ID, "Вы успешно отменили запрос на подтверждение")
 	_, err = app.Bot.Send(msg)
 	if err != nil {
 		return
