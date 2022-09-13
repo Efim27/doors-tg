@@ -32,6 +32,8 @@ func (app App) handleMsgConfirm(message *tgbotapi.Message) (err error) {
 
 	if errors.Is(err, requests.ErrNoAccess) {
 		log.Println(app.NotifyAdminsNoAccess(owner))
+		log.Println(app.ClientAPI.RunAliceScenario(requests.ScenarioRoomOpenNoAccessOrNoBatch))
+
 		return app.SendTextMsg(message.Chat.ID, "У Вас нет доступа к помещению или Ваш аккаунт еще не привязан")
 	}
 
@@ -41,8 +43,22 @@ func (app App) handleMsgConfirm(message *tgbotapi.Message) (err error) {
 		return app.SendTextMsg(message.Chat.ID, "У Вас нет доступа к помещению")
 	}
 
+	err = app.ClientAPI.DemoOpenDoor()
+	if err != nil {
+		return
+	}
+
 	adminNotifyText := fmt.Sprintf("%v %v открыл помещение", owner.Name, owner.Surname)
-	log.Println(app.NotifyAdmins(adminNotifyText))
+	err = app.NotifyAdmins(adminNotifyText)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = app.ClientAPI.RunAliceScenario(requests.ScenarioRoomOpenSuccess)
+	if err != nil {
+		log.Println(err)
+	}
+
 	return app.SendTextMsg(message.Chat.ID, "Вы успешно открыли помещение")
 }
 
@@ -58,7 +74,15 @@ func (app App) handleMsgCancel(message *tgbotapi.Message) (err error) {
 	}
 
 	adminNotifyText := fmt.Sprintf("%v %v отменил запроc на открытие помещения", owner.Name, owner.Surname)
-	log.Println(app.NotifyAdmins(adminNotifyText))
+	err = app.NotifyAdmins(adminNotifyText)
+	if err != nil {
+		log.Println(err)
+	}
+
+	err = app.ClientAPI.RunAliceScenario(requests.ScenarioRoomOpenCancel)
+	if err != nil {
+		log.Println(err)
+	}
 
 	return app.SendTextMsg(message.Chat.ID, "Вы успешно открыли помещение")
 }

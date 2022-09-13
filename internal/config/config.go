@@ -10,6 +10,7 @@ type Config struct {
 	AppPort        string `mapstructure:"APP_PORT"`
 	AppAddr        string `mapstructure:"APP_ADDR"`
 	ControlAPIAddr string `mapstructure:"CONTROL_API_ADDR"`
+	YaAuthToken    string `mapstructure:"YA_AUTH_TOKEN"`
 	Debug          bool   `mapstructure:"DEBUG"`
 }
 

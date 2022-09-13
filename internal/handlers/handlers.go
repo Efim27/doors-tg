@@ -29,7 +29,7 @@ func NewApp(config config.Config) (app *App, err error) {
 		return
 	}
 
-	app.ClientAPI = *requests.NewClientAPI(app.Config.ControlAPIAddr)
+	app.ClientAPI = *requests.NewClientAPI(app.Config.ControlAPIAddr, app.Config.YaAuthToken)
 
 	app.Bot.Debug = app.Config.Debug
 	log.Printf("Authorized on account %s\n", app.Bot.Self.UserName)
