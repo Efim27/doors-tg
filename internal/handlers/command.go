@@ -1,6 +1,8 @@
 package handlers
 
-import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+import (
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+)
 
 func (app App) handleCommand(message *tgbotapi.Message) (err error) {
 	switch message.Command() {
@@ -14,15 +16,13 @@ func (app App) handleCommand(message *tgbotapi.Message) (err error) {
 }
 
 func (app App) commandStart(message *tgbotapi.Message) (err error) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Hi!")
-
 	newUser := message.From
 	err = app.ClientAPI.NewUserTG(newUser.ID, message.Chat.ID, newUser.UserName, newUser.FirstName, newUser.LastName, newUser.LanguageCode)
 	if err != nil {
-		msg = tgbotapi.NewMessage(message.Chat.ID, err.Error())
+		return app.NotifyError(message.Chat.ID)
 	}
 
-	_, err = app.Bot.Send(msg)
+	err = app.SendTextMsg(message.Chat.ID, "Вы успешно отправили заявку на привязку телеграм аккаунта")
 	if err != nil {
 		return
 	}

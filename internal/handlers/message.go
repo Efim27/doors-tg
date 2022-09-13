@@ -1,9 +1,11 @@
 package handlers
 
 import (
+	"errors"
 	"strings"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"smart-doors-tg/internal/requests"
 )
 
 func (app App) handleMessage(message *tgbotapi.Message) (err error) {
@@ -21,13 +23,20 @@ func (app App) handleMessage(message *tgbotapi.Message) (err error) {
 }
 
 func (app App) handleMsgConfirm(message *tgbotapi.Message) (err error) {
-	msg := tgbotapi.NewMessage(message.Chat.ID, "Вы успешно открыли помещение")
-	_, err = app.Bot.Send(msg)
-
-	err = app.NotifyAdmins("")
-	if err != nil {
-		return
+	owner, err := app.ClientAPI.OwnerUserByTG(message.From.ID)
+	if (err != nil) && errors.Is(err, requests.ErrNoAccess) {
+		return app.NotifyError(message.Chat.ID)
 	}
+
+	if errors.Is(err, requests.ErrNoAccess) {
+		return app.SendTextMsg(message.Chat.ID, "У Вас нет доступа к помещению или Ваш аккаунт еще не привязан")
+	}
+
+	return app.SendTextMsg(message.Chat.ID, "Вы успешно открыли помещение")
+	//err = app.NotifyAdmins("")
+	//if err != nil {
+	//	return
+	//}
 
 	return
 }
