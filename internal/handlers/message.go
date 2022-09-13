@@ -45,6 +45,7 @@ func (app App) handleMsgConfirm(message *tgbotapi.Message) (err error) {
 
 	err = app.ClientAPI.DemoOpenDoor()
 	if err != nil {
+		log.Println(app.SendTextMsg(message.Chat.ID, "Не удалось открыть дверь"))
 		return
 	}
 

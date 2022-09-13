@@ -1,9 +1,11 @@
 package requests
 
 import (
+	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/pkg/errors"
 )
 
 func (clientAPI ClientAPI) DemoOpenDoor() (err error) {
@@ -19,7 +21,7 @@ func (clientAPI ClientAPI) DemoOpenDoor() (err error) {
 
 	code, _, errs := agent.Bytes()
 	if code != fiber.StatusOK {
-		return err
+		return errors.New(fmt.Sprintf("Bad status code: %v", code))
 	}
 
 	if len(errs) > 0 {
