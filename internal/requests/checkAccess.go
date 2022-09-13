@@ -1,8 +1,6 @@
 package requests
 
 import (
-	"encoding/json"
-	"fmt"
 	"log"
 
 	"github.com/gofiber/fiber/v2"
@@ -20,19 +18,19 @@ func (clientAPI ClientAPI) CheckAccess(firstName string, lastName string) (err e
 
 	request.SetRequestURI(url)
 
+	agent.JSON(fiber.Map{
+		"first_name":  firstName,
+		"last_name":   lastName,
+		"object_name": "main",
+	})
 	err = agent.Parse()
 	if err != nil {
 		return
 	}
 
-	code, body, errs := agent.Bytes()
-	if (code != fiber.StatusOK) && (code != fiber.StatusUnauthorized) {
-		err = errors.New(fmt.Sprintf("Bad status code: %v", code))
-		return
-	}
-	if code == fiber.StatusUnauthorized {
-		err = ErrNoAccess
-		return
+	code, _, errs := agent.Bytes()
+	if code != fiber.StatusOK {
+		return ErrNoAccess
 	}
 
 	if len(errs) > 0 {
@@ -41,12 +39,5 @@ func (clientAPI ClientAPI) CheckAccess(firstName string, lastName string) (err e
 		return
 	}
 
-	ownerUserByTGResponse := OwnerUserByTGResponse{}
-	err = json.Unmarshal(body, &ownerUserByTGResponse)
-	if err != nil {
-		return
-	}
-
-	owner = ownerUserByTGResponse.Result
 	return
 }
