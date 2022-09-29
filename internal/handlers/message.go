@@ -85,5 +85,5 @@ func (app App) handleMsgCancel(message *tgbotapi.Message) (err error) {
 		log.Println(err)
 	}
 
-	return app.SendTextMsg(message.Chat.ID, "Вы успешно открыли помещение")
+	return app.SendTextMsg(message.Chat.ID, "Вы отменили запрос")
 }
